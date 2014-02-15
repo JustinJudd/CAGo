@@ -1,0 +1,33 @@
+{{set . "title" "User Management"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+<h3>User Settings</h3>
+<hr />
+{{ $projects := .projects }}
+<ul class="list-unstyled fa-ul">
+{{range $i, $user := .users }}
+<li>
+
+	<a href="{{ url "Admin.EditUser" $user.Id }}"><i class="fa-li fa fa-user"></i>{{$user.Name}}</a> {{if $user.IsAdmin}}- ADMIN{{end}}
+	<ul>
+		{{range $j, $project := index $projects $user.Id }}
+			{{$project.Name}}
+		{{end}}
+	</ul>
+	</li>
+{{end}}
+
+</ul>
+<a class="btn btn-default" href="{{ url "User.Create"}}"><i class="fa fa-male fa-lg fa-fw"></i> Create user</a>
+
+
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

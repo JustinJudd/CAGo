@@ -1,0 +1,199 @@
+{{set . "title" "Project"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+<h3>Project: {{.project.Name}}</h3>
+{{ $project := .project}}
+{{ $templates := .templates}}
+{{ $cert_map := .cert_map}}
+{{ $revokedMap := .revokedMap }}
+<hr />
+
+<div class="col-lg-8">
+<div class="well">
+<h4>Certificates</h4>
+
+<table class="table table-striped table-bordered">
+
+	<thead>
+	  <tr>
+		<th>Common Name</th>
+		<th>Certificate Authority</th>
+		
+		<th>Actions</th>
+		
+	  </tr>
+	</thead>
+    <tbody>
+	{{ range $i, $certificate := .certs }}
+		<tr>
+			<td>
+				<a href="{{url "Admin.EditCertificate" $project.Id $certificate.Id }}">{{if index $revokedMap $certificate.Id}}<strike>{{$certificate.CommonName}}</strike>{{else}}{{$certificate.CommonName}}{{end}}</a>
+			</td>
+			<td>
+				<i class="fa {{ if $certificate.CA}}fa-check-square-o {{else}} fa-square-o {{end}} fa-fw"></i>
+			</td>
+			
+			<td>
+			<div class="btn-group ">
+			  <a class="btn btn-primary" href="{{ url "Project.Download" $project.Id $certificate.Id }}"><i class="fa fa-download fa-lg fa-fw"></i> Download Certificate</a>
+			  
+			  {{if index $cert_map $certificate.Id}}
+			  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+				<span class="fa fa-caret-down"></span><span class="sr-only">Toggle Dropdown</span></a>
+			  <ul class="dropdown-menu" role="menu">
+
+				<li class="divider"></li>
+				{{ if $certificate.PrivateKey}}
+				<li><a href="{{ url "Project.DownloadKey" $project.Id $certificate.Id }}"><i class="fa fa-download fa-fw"></i> Download Private Key</a></li>
+				<li><a data-toggle="modal" data-target="#encKeyModal{{$certificate.Id}}" href="#"><i class="fa fa-download fa-fw"></i> Encrypt and Download Private Key</a></li>
+
+				{{end}}
+	
+
+				
+				{{ if $certificate.PrivateKey}}
+				<li><a href="{{ url "Project.GenerateOneTimeLink" $project.Id $certificate.Id }}"><i class="fa fa-link fa-fw"></i> Generate One-Time Download Link</a></li>
+				{{end}}
+				<!--
+
+				<li class="divider"></li>
+				<li><a href="#"><i class="fa fa-trash-o fa-fw"></i> Revoke Certificate</a></li>
+				-->
+			  </ul>
+			  {{end}}
+			</div>
+			</td>		
+			
+
+		</tr>
+	{{else}}
+		<tr><td>No Certificates created</td><td></td><td></td></tr>
+	{{end}}
+    </tbody>
+
+
+</table>
+
+
+	<div class="btn-group">
+	<a class="btn btn-default" href="{{url "Project.CreateCertificate" .project.Id}}"><i class="fa fa-certificate fa-lg fa-fw"></i> Create new cert</a>
+	{{if $templates}}
+	<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+	<span class="fa fa-caret-down"></span><span class="sr-only">Toggle Dropdown</span></a>
+	  <ul class="dropdown-menu" role="menu">
+
+	  	{{ range $i, $template := $templates }}
+	  	<li><a href="{{ url "Project.CreateCertFromTemplate" $project.Id $template.Id }}"><i class="fa fa-book fa-fw"></i> Use {{$template.Name}}</a></li>
+	  	{{end}}
+
+	  </ul>
+	{{end}}
+	</div>
+
+</div>
+{{if .csrs}}
+<div class="well">
+<h4>Signing Requests</h4>
+	<ul class="list-unstyled fa-ul">
+
+		{{ range $i, $csr := .csrs }}
+		<li><a href="{{ url "Admin.SignCSR" $project.Id $csr.Id }}"><i class="fa fa-ticket fa-fw"></i> Sign CSR #{{$csr.Id}}</a></li>
+		{{end}}
+
+	</ul>
+</div>
+{{end}}
+
+</div>
+
+<div class="col-lg-4">
+<div class="row">
+<div class="well">
+<h4>Templates</h4>
+<ul class="list-unstyled fa-ul">
+	{{ range $i, $template := .templates }}
+		<li><a href="{{url "Admin.EditTemplate" $project.Id $template.Id }}"><i class="fa-li fa fa-book fa-fw"></i>{{$template.Name}}</a></li>
+	{{else}}
+		No Certificate Templates created
+	{{end}}
+</ul>
+
+<a class="btn btn-default" href="{{url "Admin.NewTemplate" $project.Id}}"><i class="fa fa-book fa-lg fa-fw"></i> Create new certificate template</a>
+</div>
+</div>
+<div class="row">
+<div class="well">
+	<h4>Members</h4>
+	<ul class="list-unstyled fa-ul">
+		{{ range $i, $member := .project_members }}
+			<li><a href="{{url "Admin.EditUser" $member.Id }}"><i class="fa-li fa fa-user fa-fw"></i> {{$member.Name}}</a></li>
+		{{end}}
+	</ul>
+
+	<a class="btn btn-default" href="{{url "Admin.EditProjectMembership" $project.Id}}"><i class="fa fa-group fa-lg fa-fw"></i> Manage Project Membership</a>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<hr />
+<div class="row">
+<a class="btn btn-default" href="{{url "Admin.EditProject" $project.Id}}"><i class="fa fa-briefcase fa-lg fa-fw"></i> Edit project</a>
+
+
+
+
+</div></div>
+
+{{ range $i, $certificate := .certs }}
+<div class="modal fade" tabindex="-1", id="encKeyModal{{$certificate.Id}}" role="dialog" aria-labelledby="Encrypt and Download Key" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Encrypt and Download Key</h4>
+			</div>
+			<div class="modal-body">
+			<form class="form-horizontal" action="{{url "Project.DownloadEncryptedKey" $project.Id $certificate.Id}}" method="POST">
+			<fieldset>
+
+				<div class="form-group">
+					<label class="control-label col-lg-2" for="newKey">New Key</label>
+					<div class="controls col-lg-6">
+					  <input type="text" class="form-control" name="newKey" id="newKey" placeholder="New Key"  required>
+					</div>
+				</div>
+
+				{{if $certificate.Encrypted}}
+				<div class="form-group">
+					<label class="control-label col-lg-2" for="existingKey">Existing Key</label>
+					<div class="controls col-lg-6">
+					  <input type="text" name="existingKey" id="existingKey" placeholder="Existing Key" required class="form-control" >
+					</div>
+				</div>
+				{{end}}
+
+				<div class="form-group">
+				    <div class="controls col-lg-offset-2 col-lg-6">
+				      <button class="btn btn-primary" type="submit" value="Create">Download</button>
+				    </div>
+			  	</div>
+
+			</fieldset>
+			</form>
+
+			</div>
+		</div>
+	</div> 
+</div>
+{{end}}
+
+{{template "footer.html" .}}
+
+
+
+

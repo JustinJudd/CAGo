@@ -1,0 +1,87 @@
+{{set . "title" "Create New User"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+<h3>Create a new user</h3>
+
+
+<form class="form-horizontal col-lg-10" action="{{url "Tour.SaveUser"}}" method="POST">
+  {{with $field := field "user.Email" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Email</label>
+    <div class="controls col-lg-6">
+      <input type="email" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Email" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+  {{with $field := field "user.Username" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Username</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Username" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+ {{with $field := field "user.Name" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Name</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Name" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "user.Password" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Password</label>
+    <div class="controls col-lg-6">
+      <input type="password" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Password" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+  {{with $field := field "verifyPassword" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Verify Password</label>
+    <div class="controls col-lg-6">
+      <input type="password" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Password" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "user.IsAdmin" .}}
+ <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-10">
+      <div class="checkbox">
+        <label for="{{$field.Name}}">
+          <input type="checkbox" name="{{$field.Name}}" id="{{$field.Name}}"> Admin user
+        </label>
+      </div>
+    </div>
+  </div>
+  {{end}}
+
+
+  <div class="form-group">
+    <div class="controls col-lg-offset-2 col-lg-6">
+      <button class="btn btn-primary" type="submit" value="Register">Submit</button>
+    </div>
+  </div>
+</form>
+
+
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

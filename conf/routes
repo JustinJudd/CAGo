@@ -1,0 +1,57 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+module:testrunner
+
+GET     /                                       App.Index
+GET     /download/:hash                         App.DownloadOneTimeLink
+GET     /crl/:crlId                         	App.DownloadCRL
+
+#POST    /app/create			                App.CreateCertificate
+
+GET     /user/register                         	User.Register
+POST    /user/register                          User.SaveUser
+POST    /user/login		                    	User.Login
+GET    /user/Logout	                    		User.Logout
+GET    /user/		                    		User.Index
+
+GET    /Project/:id		                    	Project.Index
+GET    /Project/:id/Create		                Project.CreateCert
+GET    /Project/:projectId/Create/:templateId   Project.CreateCertFromTemplate
+GET    /Project/:projectId/View/:certId		    Project.ViewCert
+GET    /Project/:id/Download/:certId			Project.Download
+GET    /Project/:id/DownloadChain/:certId		Project.DownloadChain
+GET    /Project/:id/DownloadKey/:certId			Project.DownloadKey
+GET    /Project/:id/GenerateOneTimeLink/:certId	Project.GenerateOneTimeLink
+POST    /Project/:id/Create		                Project.CreateCertificate
+
+GET    /Project/:id/LoadCSR						Project.LoadCSR
+
+GET    /Admin/Project/:id           			Admin.ManageProject
+GET    /Admin/Project/:id/Edit           		Admin.EditProject
+POST    /Admin/Project/:id/Edit           		Admin.UpdateProject
+GET    /Admin/Project/:id/Create           		Admin.NewTemplate
+POST   /Admin/Project/:id/Create           		Admin.CreateTemplate
+GET    /Admin/Project/:id/Edit/:templateId      Admin.EditTemplate
+
+GET    /Admin/User/:userId/Edit           		Admin.EditUser
+POST   /Admin/User/:userId/Edit           		Admin.SaveUser
+
+GET    /Admin/Project/:projectId/EditMembership Admin.EditProjectMembership
+POST   /Admin/User/:projectId/EditMembership           	Admin.SaveProjectMembership
+
+GET    /Admin/Project/:projectId/EditCert/:certId           		Admin.EditCertificate
+POST    /Admin/Project/:projectId/EditCert/:certId           		Admin.UpdateCertificate
+
+GET    	/Admin/Project/:projectId/SignCSR/:csrId           		Admin.SignCSR
+POST 	/Admin/Project/:projectId/SignCSR/:csrId           		Admin.SaveSignCSR
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/*filepath                       Static.Serve("public")
+
+# Catch all
+*       /:controller/:action                    :controller.:action

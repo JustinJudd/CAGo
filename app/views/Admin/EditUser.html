@@ -1,0 +1,100 @@
+{{set . "title" "Edit User"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+
+
+
+{{ $user := .user }}
+{{ $all_projects := .all_projects }}
+{{ $admin_projects := .admin_projects }}
+{{ $project_map := .project_map }}
+
+<div class="col-lg-10">
+<div class="well">
+<form class="form-horizontal" action="{{url "Admin.SaveUser" $user.Id}}" method="POST">
+<fieldset>
+<legend>Edit User:</legend>
+  <input type="text" name="user.Id" id="user.Id" value="{{ if $user }}{{$user.Id}}{{end}}" hidden>
+
+  {{with $field := field "user.Username" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Username</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Username" value="{{ if $user }}{{$user.Username}}{{else}}{{$field.Flash}}{{end}}" required disabled>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  {{with $field := field "user.Email" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Email</label>
+    <div class="controls col-lg-6">
+      <input type="email" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Email" value="{{ if $user }}{{$user.Email}}{{else}}{{$field.Flash}}{{end}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+ {{with $field := field "user.Name" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Name</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Name" value="{{ if $user }}{{$user.Name}}{{else}}{{$field.Flash}}{{end}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  {{with $field := field "user.IsAdmin" .}}
+ <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-10">
+      <div class="checkbox">
+        <label for="{{$field.Name}}">
+          <input type="checkbox" name="{{$field.Name}}" id="{{$field.Name}}" {{if $user.IsAdmin }}checked{{end}}> Admin user
+        </label>
+      </div>
+    </div>
+  </div>
+  {{end}}
+
+
+	{{with $field := field "projectOwnership" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Project Admin:</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" multiple name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+		{{ range $i, $project := $all_projects }}
+			<option value="{{$project.Id}}" {{if index $project_map $project.Id}}selected {{end}}>{{$project.Name}}</option>
+		{{end}}
+	  </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  <div class="form-group">
+    <div class="controls col-lg-offset-2 col-lg-6">
+      <button class="btn btn-primary" type="submit" value="Register">Submit</button>
+    </div>
+  </div>
+</fieldset>
+</form>
+
+</div></div>
+
+
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

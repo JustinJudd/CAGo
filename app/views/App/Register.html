@@ -1,0 +1,66 @@
+{{set . "title" "Register"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+
+<h1>Register:</h1>
+
+<form class="form-horizontal" action="{{url "User.SaveUser"}}" method="POST">
+  {{with $field := field "user.Email" .}}
+  <div class="control-group {{ if $field.ErrorClass}}error {{end}}">
+    <label class="control-label" for="{{$field.Name}}">Email</label>
+    <div class="controls">
+      <input type="email" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Email" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+  {{with $field := field "user.Username" .}}
+  <div class="control-group {{ if $field.ErrorClass}}error {{end}}">
+    <label class="control-label" for="{{$field.Name}}">Name</label>
+    <div class="controls">
+      <input type="text" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Username" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+  {{with $field := field "user.Name" .}}
+  <div class="control-group {{ if $field.ErrorClass}}error {{end}}">
+    <label class="control-label" for="{{$field.Name}}">Real Name</label>
+    <div class="controls">
+      <input type="text" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Name" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+  {{with $field := field "user.Password" .}}
+  <div class="control-group {{ if $field.ErrorClass}}error {{end}}">
+    <label class="control-label" for="{{$field.Name}}">Password</label>
+    <div class="controls">
+      <input type="text" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Password" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+  {{with $field := field "verifyPassword" .}}
+  <div class="control-group {{ if $field.ErrorClass}}error {{end}}">
+    <label class="control-label" for="{{$field.Name}}">Verify Password</label>
+    <div class="controls">
+      <input type="text" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Password" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+
+    </div>
+  </div>
+  {{end}}
+
+  <div class="control-group">
+    <div class="controls">
+      <button class="btn btn-primary" type="submit" value="Register">Register</button> <a class="btn btn-default" href="{{url "App.Index"}}">Cancel</a>
+    </div>
+  </div>
+</form>
+
+</div></div>
+
+{{template "footer.html" .}}

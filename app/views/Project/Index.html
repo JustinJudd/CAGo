@@ -1,0 +1,125 @@
+{{set . "title" "Project"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+<h3>Project: {{.project.Name}}</h3>
+{{ $project := .project}}
+{{ $templates := .templates}}
+{{ $revokedMap := .revokedMap }}
+
+<!--
+<ul>
+	{{ range $i, $cert := .certs }}
+		<li><a href="{{url "Project.ViewCert" $project.Id $cert.Id }}">{{$cert.CommonName}}</a></li>
+	{{else}}
+		No Certificates created
+	{{end}}
+</ul>
+-->
+<table class="table table-striped">
+
+	<thead>
+	  <tr>
+		<th>Common Name</th>
+		<th>Certificate Authority</th>
+		<th>Actions</th>
+	  </tr>
+	</thead>
+	{{ range $i, $certificate := .certs }}
+    <tbody>
+		<tr>
+			<td>
+				<a href="{{url "Project.ViewCert" $project.Id $certificate.Id }}">{{if index $revokedMap $certificate.Id}}<strike>{{$certificate.CommonName}}</strike>{{else}}{{$certificate.CommonName}}{{end}}</a>
+			</td>
+			<td>
+				<i class="fa {{ if $certificate.CA}}fa-check-square-o {{else}} fa-square-o {{end}} fa-fw"></i>
+			</td>
+			<td>
+			<div class="btn-group">
+			  <a class="btn btn-primary" href="{{ url "Project.Download" $project.Id $certificate.Id }}"><i class="fa fa-download fa-lg fa-fw"></i> Download Public Certificate</a>
+			  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+				<span class="fa fa-caret-down"></span></a>
+			  <ul class="dropdown-menu">
+
+				<li class="divider"></li>
+				{{ if $certificate.PrivateKey}}
+				<li><a href="{{ url "Project.DownloadKey" $project.Id $certificate.Id }}"><i class="fa fa-download fa-fw"></i> Download Private Key</a></li>
+				<li><a data-toggle="modal" data-target="#encKeyModal{{$certificate.Id}}" href="#"><i class="fa fa-download fa-fw"></i> Encrypt and Download Private Key</a></li>
+
+
+				{{end}}
+	
+				<!--
+				{{ if $certificate.PrivateKey}}<li><a href="{{ url "Project.GenerateOneTimeLink" $project.Id $certificate.Id }}"><i class="fa fa-link fa-fw"></i> Generate One-Time Download Link</a></li>{{end}}
+				-->
+			  </ul>
+			</div>
+			</td>		
+
+		</tr>
+	{{else}}
+		No Certificates created
+	{{end}}
+    </tbody>
+
+
+</table>
+
+
+{{ if .user}}
+<a class="btn btn-default" href="{{ url "Project.LoadCSR" $project.Id  }}"><i class="fa fa-upload fa-fw fa-lg"></i> Upload CSR</a>
+{{end}}
+
+
+</div></div>
+
+{{ range $i, $certificate := .certs }}
+<div class="modal fade" tabindex="-1", id="encKeyModal{{$certificate.Id}}" role="dialog" aria-labelledby="Encrypt and Download Key" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Encrypt and Download Key</h4>
+			</div>
+			<div class="modal-body">
+			<form class="form-horizontal" action="{{url "Project.DownloadEncryptedKey" $project.Id $certificate.Id}}" method="POST">
+			<fieldset>
+
+				<div class="form-group">
+					<label class="control-label col-lg-2" for="newKey">New Key</label>
+					<div class="controls col-lg-6">
+					  <input type="text" class="form-control" name="newKey" id="newKey" placeholder="New Key"  required>
+					</div>
+				</div>
+
+				{{if $certificate.Encrypted}}
+				<div class="form-group">
+					<label class="control-label col-lg-2" for="existingKey">Existing Key</label>
+					<div class="controls col-lg-6">
+					  <input type="text" name="existingKey" id="existingKey" placeholder="Existing Key" required class="form-control" >
+					</div>
+				</div>
+				{{end}}
+
+				<div class="form-group">
+				    <div class="controls col-lg-offset-2 col-lg-6">
+				      <button class="btn btn-primary" type="submit" value="Create">Download</button>
+				    </div>
+			  	</div>
+
+
+			</fieldset>
+			</form>
+
+			</div>
+		</div>
+	</div> 
+</div>
+{{end}}
+
+{{template "footer.html" .}}
+
+
+
+

@@ -1,0 +1,65 @@
+{{set . "title" "Tour: Create Project"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+<h3>Almost finished setting up</h3>
+<p> 
+Now we can create a project to manage and hold certificates.
+</p>
+
+
+<div class="col-lg-10">
+<div class="well">
+<form class="form-horizontal" action="{{url "Tour.SaveProject"}}" method="POST">
+  {{with $field := field "project.Name" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Project Name</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Name" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "project.Description" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Description</label>
+    <div class="controls col-lg-6">
+     <textarea class="form-control" name="{{$field.Name}}" id="{{$field.Name}}"  required> </textarea>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "project.Public" .}}
+ <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-10">
+      <div class="checkbox">
+        <label for="{{$field.Name}}">
+          <input type="checkbox" name="{{$field.Name}}" id="{{$field.Name}}"> Publicly Visible
+        </label>
+      </div>
+    </div>
+  </div>
+  {{end}}
+
+
+
+  <div class="form-group">
+    <div class="controls col-lg-offset-2 col-lg-6">
+      <button class="btn btn-primary" type="submit" value="Create">Continue</button>
+    </div>
+  </div>
+</form>
+
+</div></div>
+
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

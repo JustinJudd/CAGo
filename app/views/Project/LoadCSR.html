@@ -1,0 +1,54 @@
+{{set . "title" "Create Certificate"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+
+<h1>Load CSR:</h1>
+
+{{ $cas := .cas}}
+{{ $project := .project}}
+
+<form class="form-horizontal col-lg-10" action="{{url "Project.SaveCSR" .project.Id}}" method="POST">
+
+  
+  {{with $field := field "csr.CSR" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">PEM text:</label>
+    <div class="controls col-lg-6">
+      <textarea class="form-control" name="{{$field.Name}}" id="{{$field.Name}}"  required></textarea>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "csr.RequestedCAId" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Sign by:</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+		
+		{{ range $i, $ca := $cas }}
+		<option value="{{$ca.Id}}">{{$ca.CommonName}}</option>
+		{{end}}
+	  </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  <div class="form-group">
+    <div class="controls col-lg-offset-2 col-lg-6">
+      <button class="btn btn-primary" type="submit" value="Sign"><i class="fa fa-upload fa-fw fa-lg"></i> Submit for Signing</button>
+    </div>
+  </div>
+</form>
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

@@ -1,0 +1,29 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+
+{{if .projects}}
+<h3>Available Projects:</h3>
+<hr />
+<ul class="list-unstyled fa-ul">
+{{range $j, $project := .projects}}
+	<li><a href="{{url "Project.Index" $project.Id}}">
+		<i class="fa-li fa fa-flask fa-fw"></i> {{$project.Name}}
+		<small>{{$project.Description}}</small>
+	</a></li>
+
+{{end}}
+</ul>
+{{else}}
+<h3>Please login</h3>
+{{end}}
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

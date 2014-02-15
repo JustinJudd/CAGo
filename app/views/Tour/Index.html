@@ -1,0 +1,39 @@
+{{set . "title" "Tour Start"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+<h3>Welcome to CA Go!</h3>
+<p> 
+To begin, we will need the server information.
+</p>
+
+
+<form class="form-horizontal col-lg-10" action="{{url "Tour.SaveServerInfo"}}" method="POST">
+  {{with $field := field "serverURL" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Server URL</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="http://servername.com" value="{{$field.Flash}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  <div class="form-group">
+    <div class="controls col-lg-offset-2 col-lg-6">
+      <button class="btn btn-primary" type="submit" value="Register">Continue</button>
+    </div>
+  </div>
+</form>
+
+
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

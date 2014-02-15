@@ -1,0 +1,185 @@
+{{set . "title" "Create Certificate Template"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+
+
+{{ $template := .template }}
+{{ $cas := .cas}}
+<div class="col-lg-10">
+<div class="well">
+<form class="form-horizontal" action="{{url "Admin.UpdateTemplate" .project.Id}}" method="POST">
+<fieldset>
+<legend>Create Certificate Template:</legend>
+
+  <input type="text" name="template.Id" id="template.Id" value="{{ if $template }}{{$template.Id}}{{end}}" hidden>
+
+	{{with $field := field "template.Name" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Template Name</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Template 1" value="{{$template.Name}}" required disabled>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "template.Country" .}}
+  {{$selected := $template.Country}} {{if $field.Flash}}{{$selected := $field.Flash}}{{end}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Country</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+        {{countryOption $selected}}
+        </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "template.State" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">State</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="DC" value="{{if $field.Flash}}{{$field.Flash}}{{else}}{{$template.State}}{{end}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  {{with $field := field "template.City" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">City</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Washington" value="{{if $field.Flash}}{{$field.Flash}}{{else}}{{$template.City}}{{end}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "template.Organization" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Organization</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Organization" value="{{if $field.Flash}}{{$field.Flash}}{{else}}{{$template.Organization}}{{end}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "template.OrganizationUnit" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Organization Unit</label>
+    <div class="controls col-lg-6">
+      <input type="text" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Organization Unit" value="{{if $field.Flash}}{{$field.Flash}}{{else}}{{$template.OrganizationUnit}}{{end}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  {{with $field := field "template.Expires" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Expiration Date</label>
+    <div class="controls col-lg-6">
+      <input type="date" class="form-control" name="{{$field.Name}}" id="{{$field.Name}}" placeholder="Expiration Date" value="{{if $field.Flash}}{{$field.Flash}}{{else}}{{$template.Expires}}{{end}}" required>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  {{with $field := field "template.PrivateKeyType" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Private Key Type</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+		{{keyOption $template.PrivateKeyType}}
+	  </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+<!--
+  {{with $field := field "certificate.IsCA" .}}
+ <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-10">
+      <div class="checkbox">
+        <label for="{{$field.Name}}">
+          <input type="checkbox" name="{{$field.Name}}" id="{{$field.Name}}"> Certificate Authority
+        </label>
+      </div>
+    </div>
+  </div>
+  {{end}}
+-->
+
+  {{with $field := field "template.IsCA" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Certificate Authority</label>
+    <div class="controls col-lg-10 checkbox">
+      <input type="checkbox" name="{{$field.Name}}" id="{{$field.Name}}" style="margin-left:5px;" {{if $template.IsCA }}checked{{end}}>
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "template.KeyUses" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Key Uses</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" multiple name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+		{{keyUsageOption $template.KeyUses}}
+	  </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "template.ExtKeyUses" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Extra Key Uses</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" multiple name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+		{{extKeyUsageOption $template.ExtKeyUses}}
+	  </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  {{with $field := field "template.SignedBy" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Signed by:</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+		<option value="0">Self</option>
+		{{ range $i, $ca := $cas }}
+		<option value="{{$ca.Id}}" {{if eq $template.SignedBy $ca.Id}}selected="selected"{{end}}>{{$ca.CommonName}}</option>
+		{{end}}
+	  </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  <div class="form-group">
+    <div class="controls col-lg-offset-2 col-lg-6">
+      <button class="btn btn-primary" type="submit" value="Update">Update</button>
+    </div>
+  </div>
+</fieldset>
+</form>
+</div></div>
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

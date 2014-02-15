@@ -1,0 +1,40 @@
+{{set . "title" "Admin"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+<h3>User Settings</h3>
+
+<ul class="fa-ul">
+	<li><a href="{{url "User.Password"}}"><i class="fa fa-li fa-lock fa-lg fa-fw"></i> Change Password</a></li>
+</ul>
+
+{{ if .anyAdmin }}
+<h3>Admin Settings</h3>
+<ul class="fa-ul">
+
+
+{{ if .user.IsAdmin}}
+	<li><a href="{{url "Admin.Users"}}"><i class="fa fa-li fa-group fa-lg fa-fw"></i> Manage Users</a></li><br />
+{{end}}
+{{ if .isProjectOwner }}
+	<li><a href="{{url "Admin.Projects"}}"><i class="fa fa-li fa-briefcase fa-lg fa-fw"></i> Manage Projects</a></li>
+{{end}}
+	<br />
+
+</ul>
+
+
+{{end}}
+
+
+</ul>
+
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

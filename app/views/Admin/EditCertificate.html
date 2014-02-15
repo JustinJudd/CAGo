@@ -1,0 +1,169 @@
+{{set . "title" "Edit Certificate"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+<div class="col-lg-6">
+<h3>Project: {{.project.Name}} <small>Edit Certificate</small></h3>
+
+{{ $project := .project}}
+{{ $certificate := .certificate}}
+{{ $chain := index .chains 0 }}
+{{ $users_map := .users_map}}
+{{ $owner_map := .owner_map}}
+
+
+	<dl class="dl-horizontal">
+    <dt>Status:</dt> <dd>{{ if .revoked}}REVOKED{{else}}VALID{{end}}</dd>
+ 		<dt>Country:</dt> <dd>{{ index .cert.Subject.Country 0 }}</dd>
+ 		<dt>State:</dt> <dd>{{ index .cert.Subject.Province 0 }}</dd>
+ 		<dt>City:</dt> <dd>{{ index .cert.Subject.Locality 0 }}</dd>
+ 		<dt>Organization:</dt> <dd>{{ index .cert.Subject.Organization 0 }}</dd>
+ 		<dt>Organizational Unit:</dt> <dd>{{ index .cert.Subject.OrganizationalUnit 0 }}</dd>
+ 		<dt>Common Name:</dt> <dd>{{ index .cert.Subject.CommonName }}</dd>
+ 		<br />
+ 		<dt>Signed By:</dt> <dd>{{ index .cert.Issuer.CommonName  }}</dd>
+ 		<br />
+ 		<dt>Key Uses:</dt> 
+ 		<dd>
+ 		{{ $size := len .keyUses}}{{ range $i, $key := .keyUses }}{{if $i}}, {{end}}{{$key}}{{end}}
+ 		</dd>
+ 		<dt>Extra Key Uses:</dt> 
+ 		<dd>
+ 		{{ range $i, $key := .extKeyUses }}{{if $i}}, {{end}}{{$key}}{{end}}
+ 		</dd>
+ 		<br />
+ 		<dt>CA:</dt> <dd><i class="fa {{ if .cert.IsCA  }}fa-check-square-o{{else}}fa-times-circle-o{{end}} fa-lg fa-fw"></i></dd>
+    <dt>CA Chain:</dt> <dd>{{range $i, $cert := $chain}}
+{{if $i}}<i class="fa fa-arrow-left fa-fw"></i>{{end}}{{$cert.Subject.CommonName}}
+{{end}}</dd>
+
+
+	</dl>
+
+<br />
+
+
+{{ if .revoked}}
+{{else}}
+  {{if .canRevokeKey}}
+  <a class="btn btn-default" href="{{url "Admin.RevokeCertificate" $project.Id $certificate.Id }}"><i class="fa fa-trash-o fa-lg fa-fw"></i> Revoke cert</a>
+  {{end}}
+
+{{end}}
+
+
+<div class="btn-group">
+  <a class="btn btn-primary" href="{{ url "Project.Download" $project.Id $certificate.Id }}"><i class="fa fa-download fa-lg fa-fw"></i> Download Public Certificate</a>
+  {{if or .canDownloadKey .canRevokeKey}}
+  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+    <span class="fa fa-caret-down"></span></a>
+  <ul class="dropdown-menu">
+
+  {{ if len $chain }}
+    <li><a href="{{ url "Project.DownloadChain" $project.Id $certificate.Id }}"><i class="fa fa-download fa-fw"></i> Download Certificate Chain</a></li>
+  {{ end }}
+
+  <li class="divider"></li>
+  {{if .canDownloadKey}}
+    {{ if .certificate.PrivateKey}}
+    <li><a href="{{ url "Project.DownloadKey" $project.Id $certificate.Id }}"><i class="fa fa-download fa-fw"></i> Download Private Key</a></li>
+    <li><a data-toggle="modal" data-target="#encKeyModal{{$certificate.Id}}" href="#"><i class="fa fa-download fa-fw"></i> Encrypt and Download Private Key</a></li>
+
+    {{end}}
+    {{end}}
+  
+  {{if .canRevokeKey}}
+    {{ if .certificate.PrivateKey}}<li><a href="{{ url "Project.GenerateOneTimeLink" $project.Id $certificate.Id }}"><i class="fa fa-link fa-fw"></i> Generate One-Time Download Link</a></li>{{end}}
+    {{end}}
+  </ul>
+  {{end}}
+  </div>
+  </div>
+
+
+<div class="col-lg-6">
+<div class="well">
+<form class="form-horizontal" action="{{url "Admin.UpdateCertificate" $project.Id $certificate.Id}}" method="POST">
+<fieldset>
+<legend>Edit Ownership:</legend>
+  <input type="text" name="project.Id" id="project.Id" value="{{ if $project }}{{$project.Id}}{{end}}" hidden>
+
+  <input type="text" name="cert.Id" id="cert.Id" value="{{ if $certificate }}{{$certificate.Id}}{{end}}" hidden>
+
+  {{with $field := field "certificateOwnership" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Certificate Owners:</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" multiple name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+    {{ range $i, $member := $users_map }}
+      <option value="{{$member.Id}}" {{if index $owner_map $i}}selected {{end}}>{{$member.Name}}</option>
+    {{end}}
+    </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+  <div class="form-group">
+    <div class="controls col-lg-offset-2 col-lg-6">
+      <button class="btn btn-primary" type="submit" value="Send">Submit</button>
+    </div>
+  </div>
+
+  </fieldset>
+  </form>
+
+</div>
+</div>
+
+
+
+</div></div>
+
+<div class="modal fade" tabindex="-1", id="encKeyModal{{$certificate.Id}}" role="dialog" aria-labelledby="Encrypt and Download Key" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Encrypt and Download Key</h4>
+      </div>
+      <div class="modal-body">
+      <form class="form-horizontal" action="{{url "Project.DownloadEncryptedKey" $project.Id $certificate.Id}}" method="POST">
+      <fieldset>
+
+        <div class="form-group">
+          <label class="control-label col-lg-2" for="newKey">New Key</label>
+          <div class="controls col-lg-6">
+            <input type="text" class="form-control" name="newKey" id="newKey" placeholder="New Key"  required>
+          </div>
+        </div>
+
+        {{if $certificate.Encrypted}}
+        <div class="form-group">
+          <label class="control-label col-lg-2" for="existingKey">Existing Key</label>
+          <div class="controls col-lg-6">
+            <input type="text" name="existingKey" id="existingKey" placeholder="Existing Key" required class="form-control" >
+          </div>
+        </div>
+        {{end}}
+
+        <div class="form-group">
+            <div class="controls col-lg-offset-2 col-lg-6">
+              <button class="btn btn-primary" type="submit" value="Create">Download</button>
+            </div>
+          </div>
+
+      </fieldset>
+      </form>
+
+      </div>
+    </div>
+  </div> 
+</div>
+
+{{template "footer.html" .}}
+
+
+
+

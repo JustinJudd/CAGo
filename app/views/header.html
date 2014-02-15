@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.title}}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
+    <link rel="shortcut icon" type="image/png" href="/public/img/favicon.png">
+    <script src="/public/js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="/public/css/font-awesome.min.css">
+    {{range .moreStyles}}
+      <link rel="stylesheet" type="text/css" href="/public/{{.}}">
+    {{end}}
+    {{range .moreScripts}}
+      <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
+    {{end}}
+  </head>
+
+	<style type="text/css">
+		  body {
+		    padding-top: 75px;
+		    padding-bottom: 40px;
+		    /*background-image: url("/public/img/bg.png");*/
+		  }
+		</style>
+  <body>
+<div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{url "App.Index" }}"><span class="fa-stack">
+  <i class="fa fa-square fa-stack-2x fa-fw"></i>
+  <i class="fa fa-certificate fa-stack-1x fa-inverse fa-spin fa-fw"></i>
+</span> CA Go!</a>
+        </div>
+        <div class="navbar-collapse collapse">
+		<!--
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+		-->
+          <ul class="nav navbar-nav navbar-right">
+			{{if .user}}
+            <li><a href="{{url "User.Logout" }}">Log out</a></li>	
+			<li><a href="{{url "Admin.Index" }}"><i class="fa fa-gear fa-lg"></i></a> </li>
+            {{else}}
+            <li class="dropdown">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
+              <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+                <form action="{{url "User.Login" }}" method="post" accept-charset="UTF-8">
+                  <input id="user_username" class="form-control" style="margin-bottom: 15px;" type="text" name="username" size="30" placeholder="username" />
+                  <input id="user_password" class="form-control" style="margin-bottom: 15px;" type="password" name="password" size="30" placeholder="password" />
+                  <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="remember_me" value="1" />
+                  <label class="string optional" for="user_remember_me"> Remember me</label>
+                 <br />
+                  <input class="btn btn-primary btn-block" type="submit" name="commit" style="margin-bottom: 15px;" value="Sign In" />
+                </form>
+              </div>
+            </li>
+			{{end}}
+
+          </ul>
+		
+			
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+	<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      {{template "flash.html" .}}
+    </div>
+  </div>
+
+	{{if .breadcrumbs }}
+	<ol class="breadcrumb col-lg-8 col-lg-offset-2">
+		{{ range $i, $breadcrumb := .breadcrumbs }}
+			{{if $breadcrumb.Active}}
+				<li class="active">{{$breadcrumb.Name}}</li>
+			{{ else}}
+				<li><a href="{{$breadcrumb.Url}}">{{$breadcrumb.Name}}</a></li>
+			{{end}}
+		{{end}}
+	</ol>
+
+	{{end}}
+</div>
+
+

@@ -1,0 +1,70 @@
+{{set . "title" "Edit Project Membership"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+
+
+{{ $project := .project }}
+{{ $member_map := .member_map }}
+{{ $owner_map := .owner_map }}
+{{ $users_map := .users_map }}
+
+
+<div class="col-lg-10">
+<div class="well">
+<form class="form-horizontal" action="{{url "Admin.SaveProjectMembership" $project.Id}}" method="POST">
+<fieldset>
+<legend>Edit Membership:</legend>
+  <input type="text" name="project.Id" id="project.Id" value="{{ if $project }}{{$project.Id}}{{end}}" hidden>
+
+  
+
+  {{with $field := field "projectOwnership" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Project Admins:</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" multiple name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+    {{ range $i, $member := $users_map }}
+      <option value="{{$member.Id}}" {{if index $owner_map $i}}selected {{end}}>{{$member.Name}}</option>
+    {{end}}
+    </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+	{{with $field := field "projectMembership" .}}
+  <div class="form-group {{ if $field.ErrorClass}}has-error {{end}}">
+    <label class="control-label col-lg-2" for="{{$field.Name}}">Project Members:</label>
+    <div class="controls col-lg-6">
+      <select class="form-control" multiple name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
+		{{ range $i, $member := $users_map }}
+			<option value="{{$member.Id}}" {{if index $member_map $i }}selected {{end}}>{{$member.Name}}</option>
+		{{end}}
+	  </select>
+      {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
+    </div>
+  </div>
+  {{end}}
+
+
+  <div class="form-group">
+    <div class="controls col-lg-offset-2 col-lg-6">
+      <button class="btn btn-primary" type="submit" value="Register">Submit</button>
+    </div>
+  </div>
+</fieldset>
+</form>
+
+</div></div>
+
+
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+

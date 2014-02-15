@@ -1,0 +1,42 @@
+{{set . "title" "Manage Projects"}}
+{{template "header.html" .}}
+
+<div class="container">
+<div class="row">
+<h3>Manage Projects</h3>
+<hr />
+<ul class="list-unstyled fa-ul">
+{{ if .user.IsAdmin}}
+	{{range $j, $project := .projects}}
+		<li><a href="{{url "Admin.ManageProject" $project.Id}}">
+			<i class="fa-li fa fa-flask fa-fw"></i> {{$project.Name}}
+			<small>{{$project.Description}}</small>
+		</a></li>
+
+	{{end}}
+
+{{else}}
+	{{range $j, $project := .owned_projects}}
+		<li><a href="{{url "Admin.ManageProject" $project.Id}}">
+			<i class="fa-li fa fa-flask fa-fw"></i> {{$project.Name}}
+			<small>{{$project.Description}}</small>
+		</a></li>
+
+	{{end}}
+{{end}}
+
+
+
+</ul>
+<br />
+{{ if .user.IsAdmin }}
+<a class="btn btn-default" href="{{url "Admin.Project"}}"><i class="fa fa-flask fa-lg fa-fw"></i> Create New Project</a>
+{{end}}
+
+</div></div>
+
+{{template "footer.html" .}}
+
+
+
+
