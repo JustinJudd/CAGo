@@ -20,9 +20,9 @@
 	  <tr>
 		<th>Common Name</th>
 		<th>Certificate Authority</th>
-		
+
 		<th>Actions</th>
-		
+
 	  </tr>
 	</thead>
     <tbody>
@@ -34,11 +34,11 @@
 			<td>
 				<i class="fa {{ if $certificate.CA}}fa-check-square-o {{else}} fa-square-o {{end}} fa-fw"></i>
 			</td>
-			
+
 			<td>
 			<div class="btn-group ">
 			  <a class="btn btn-primary" href="{{ url "Project.Download" $project.Id $certificate.Id }}"><i class="fa fa-download fa-lg fa-fw"></i> Download Certificate</a>
-			  
+
 			  {{if index $cert_map $certificate.Id}}
 			  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
 				<span class="fa fa-caret-down"></span><span class="sr-only">Toggle Dropdown</span></a>
@@ -50,9 +50,9 @@
 				<li><a data-toggle="modal" data-target="#encKeyModal{{$certificate.Id}}" href="#"><i class="fa fa-download fa-fw"></i> Encrypt and Download Private Key</a></li>
 
 				{{end}}
-	
 
-				
+
+
 				{{ if $certificate.PrivateKey}}
 				<li><a href="{{ url "Project.GenerateOneTimeLink" $project.Id $certificate.Id }}"><i class="fa fa-link fa-fw"></i> Generate One-Time Download Link</a></li>
 				{{end}}
@@ -64,8 +64,8 @@
 			  </ul>
 			  {{end}}
 			</div>
-			</td>		
-			
+			</td>
+
 
 		</tr>
 	{{else}}
@@ -150,7 +150,7 @@
 </div></div>
 
 {{ range $i, $certificate := .certs }}
-<div class="modal fade" tabindex="-1", id="encKeyModal{{$certificate.Id}}" role="dialog" aria-labelledby="Encrypt and Download Key" aria-hidden="true">
+<div class="modal fade" tabindex="-1" id="encKeyModal{{$certificate.Id}}" role="dialog" aria-labelledby="Encrypt and Download Key" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -188,7 +188,7 @@
 
 			</div>
 		</div>
-	</div> 
+	</div>
 </div>
 {{end}}
 

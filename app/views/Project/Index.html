@@ -49,13 +49,13 @@
 
 
 				{{end}}
-	
+
 				<!--
 				{{ if $certificate.PrivateKey}}<li><a href="{{ url "Project.GenerateOneTimeLink" $project.Id $certificate.Id }}"><i class="fa fa-link fa-fw"></i> Generate One-Time Download Link</a></li>{{end}}
 				-->
 			  </ul>
 			</div>
-			</td>		
+			</td>
 
 		</tr>
 	{{else}}
@@ -75,7 +75,7 @@
 </div></div>
 
 {{ range $i, $certificate := .certs }}
-<div class="modal fade" tabindex="-1", id="encKeyModal{{$certificate.Id}}" role="dialog" aria-labelledby="Encrypt and Download Key" aria-hidden="true">
+<div class="modal fade" tabindex="-1" id="encKeyModal{{$certificate.Id}}" role="dialog" aria-labelledby="Encrypt and Download Key" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -114,7 +114,7 @@
 
 			</div>
 		</div>
-	</div> 
+	</div>
 </div>
 {{end}}
 
