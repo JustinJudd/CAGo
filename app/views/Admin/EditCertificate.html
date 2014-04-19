@@ -24,11 +24,11 @@
  		<br />
  		<dt>Signed By:</dt> <dd>{{ index .cert.Issuer.CommonName  }}</dd>
  		<br />
- 		<dt>Key Uses:</dt> 
+ 		<dt>Key Uses:</dt>
  		<dd>
  		{{ $size := len .keyUses}}{{ range $i, $key := .keyUses }}{{if $i}}, {{end}}{{$key}}{{end}}
  		</dd>
- 		<dt>Extra Key Uses:</dt> 
+ 		<dt>Extra Key Uses:</dt>
  		<dd>
  		{{ range $i, $key := .extKeyUses }}{{if $i}}, {{end}}{{$key}}{{end}}
  		</dd>
@@ -72,7 +72,7 @@
 
     {{end}}
     {{end}}
-  
+
   {{if .canRevokeKey}}
     {{ if .certificate.PrivateKey}}<li><a href="{{ url "Project.GenerateOneTimeLink" $project.Id $certificate.Id }}"><i class="fa fa-link fa-fw"></i> Generate One-Time Download Link</a></li>{{end}}
     {{end}}
@@ -121,7 +121,7 @@
 
 </div></div>
 
-<div class="modal fade" tabindex="-1", id="encKeyModal{{$certificate.Id}}" role="dialog" aria-labelledby="Encrypt and Download Key" aria-hidden="true">
+<div class="modal fade" tabindex="-1" id="encKeyModal{{$certificate.Id}}" role="dialog" aria-labelledby="Encrypt and Download Key" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -159,7 +159,7 @@
 
       </div>
     </div>
-  </div> 
+  </div>
 </div>
 
 {{template "footer.html" .}}
