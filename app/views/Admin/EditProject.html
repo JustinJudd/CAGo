@@ -36,7 +36,7 @@
     <div class="col-lg-offset-2 col-lg-10">
       <div class="checkbox">
         <label for="{{$field.Name}}">
-          <input type="checkbox" name="{{$field.Name}}" id="{{$field.Name}}"> Publicly Visible
+          <input type="checkbox" name="{{$field.Name}}" id="{{$field.Name}}"{{if or $field.Flash $project.Public}} checked="checked"{{end}}> Publicly Visible
         </label>
       </div>
     </div>
