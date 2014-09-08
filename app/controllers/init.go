@@ -112,8 +112,8 @@ func getKeyUsageOptions(selectedKeys string) template.HTML {
 	return template.HTML(output)
 }
 
-var extKeyUsageList = []string{"1", "2", "3", "4", "5", "9", "10"}
-var extKeyUsageMap = map[string]string{"1": "Any", "2": "Server Authentication", "3": "Client Authentication", "4": "Code Signing", "5": "Email Protection", "9": "Time Stamping", "10": "OCSP Signing"}
+var extKeyUsageList = []string{"0", "1", "2", "3", "4", "8", "9"}
+var extKeyUsageMap = map[string]string{"0": "Any", "1": "Server Authentication", "2": "Client Authentication", "3": "Code Signing", "4": "Email Protection", "8": "Time Stamping", "9": "OCSP Signing"}
 
 // Function available to templats to fill Certificate Extra Key Usage dropdown
 func getExtKeyUsageOptions(selectedKeys string) template.HTML {

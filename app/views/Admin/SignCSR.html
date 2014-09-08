@@ -152,13 +152,13 @@
     <label class="control-label col-lg-2" for="{{$field.Name}}">Extra Key Uses</label>
     <div class="controls col-lg-6">
       <select class="form-control" multiple name="{{$field.Name}}" id="{{$field.Name}}"  value="{{$field.Flash}}">
-		<option value="1">Any</option>
-		<option value="2">Server Authentication</option>
-		<option value="3">Client Authentication</option>
-		<option value="4">Code Signing</option>
-		<option value="5">Email Protection</option>
-		<option value="9">Time Stamping</option>
-		<option value="10">OCSP Signing</option>
+		<option value="0">Any</option>
+		<option value="1">Server Authentication</option>
+		<option value="2">Client Authentication</option>
+		<option value="3">Code Signing</option>
+		<option value="4">Email Protection</option>
+		<option value="8">Time Stamping</option>
+		<option value="9">OCSP Signing</option>
 	  </select>
       {{ if $field.ErrorClass}}<span class="help-inline">{{$field.Error}}</span> {{end}}
     </div>
